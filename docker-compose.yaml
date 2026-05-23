@@ -1,0 +1,139 @@
+version: "3.8"
+
+services:
+  backend:
+    image: manhtuongnguyen/dca-simulation-backend:0.1.1
+    container_name: dca-backend
+    networks:
+      - dca-simulation-network
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      RABBITMQ_URL: amqp://user:root@rabbitmq:5672//
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - '${BACKEND_HOST_PORT:-8069}:8000'
+    volumes:
+      - duckdb:/api/data
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py fetch_symbols &&
+             gunicorn stock.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 3 --log-level info
+            "
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/health/" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery_worker:
+    image: manhtuongnguyen/dca-simulation-backend:0.1.1
+    container_name: dca-celery-worker
+    command: >
+      sh -c "python manage.py migrate_duckdb &&
+            celery -A stock worker -Q normal --loglevel=info --without-mingle"
+    environment:
+      DB_HOST: db
+      RABBITMQ_URL: amqp://user:root@rabbitmq:5672//
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - duckdb:/api/data
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - dca-simulation-network
+
+  web:
+    image: manhtuongnguyen/dca-simulation-web:0.1.1
+    container_name: dca-web
+    networks:
+      - dca-simulation-network
+    ports:
+      - '${WEB_HOST_PORT:-3069}:3069'
+  db:
+    image: postgres:16-alpine
+    container_name: stockchart-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME:-stockchart}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dca-simulation-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: stockchart-redis
+    restart: unless-stopped
+    networks:
+      - dca-simulation-network
+    ports:
+      - '${REDIS_HOST_PORT:-6379}:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    networks:
+      - dca-simulation-network
+    ports:
+      - '${RABBITMQ_MANAGEMENT_HOST_PORT:-15672}:15672'
+      - '${RABBITMQ_AMQP_HOST_PORT:-5672}:5672'
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: root
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test:
+        - CMD
+        - rabbitmq-diagnostics
+        - '-q'
+        - ping
+      retries: 3
+      timeout: 5s
+      interval: 30s
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  duckdb:
+
+
+networks:
+  dca-simulation-network:
