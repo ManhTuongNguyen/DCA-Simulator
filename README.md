@@ -7,11 +7,26 @@ Welcome to the **DCA (Dollar-Cost Averaging) Simulation Platform** repository. T
 ## 🚀 Key Features
 
 - **Interactive DCA Simulator**: Input investment amounts, start/end dates, and analyze simulated performance.
+- **Investment growth Simulator**: Input a lump-sum investment amount and simulate its growth over time.
 - **Background Worker Processing**: Heavy simulation computations and stock market data crawling are managed asynchronously using Celery and RabbitMQ.
 - **Data Persistence**: Uses PostgreSQL for system metadata, and integrates DuckDB for fast analytics on historical financial time-series data.
 - **Modern Web Interface**: Responsive and visual dashboard to input parameters and interact with dynamic asset performance charts.
 
 ---
+
+## [v0.1.2] - 2026-07-26
+
+### Bug Fixes
+* **Symbol Data:** Fixed an issue where the application could not retrieve symbol list data.
+* **General:** Resolved various minor bugs and improved overall system stability.
+
+### New Features
+* **Investment Growth:** Added the lump-sum investment growth calculator.
+
+### Updates
+* **Symbol Detail:** Redesigned and updated the symbol detail page for a better user experience.
+
+--
 
 ## 📸 Screenshots & Dashboard Gallery
 
@@ -23,21 +38,31 @@ Here are screenshots showcasing the DCA Simulation Platform, its interactive cha
 
 <p align="center">
   <img src="images/image_1.png" alt="Screenshot 1" width="45%">
-  <img src="images/image_2.png" alt="Screenshot 2" width="45%">
+  <img src="images/image_3.png" alt="Screenshot 3" width="45%">
 </p>
 
 <p align="center">
-  <img src="images/image_3.png" alt="Screenshot 3" width="45%">
-  <img src="images/image_4.png" alt="Screenshot 4" width="45%">
+  <img src="images/image_2.png" alt="Screenshot 2" width="45%">
+  <img src="images/image_5.png" alt="Screenshot 5" width="45%">
 </p>
 
 <p align="center">
   <img src="images/image_7.png" alt="Screenshot 7" width="45%">
-  <img src="images/image_6.png" alt="Screenshot 6" width="45%">
+  <img src="images/image_4.png" alt="Screenshot 4" width="45%">
 </p>
 
 <p align="center">
-  <img src="images/image_5.png" alt="Screenshot 5" width="45%">
+  <img src="images/image_8.png" alt="Screenshot 8" width="45%">
+  <img src="images/image_9.png" alt="Screenshot 9" width="45%">
+</p>
+
+<p align="center">
+  <img src="images/image_10.png" alt="Screenshot 10" width="45%">
+  <img src="images/image_12.png" alt="Screenshot 12" width="45%">
+</p>
+
+<p align="center">
+  <img src="images/image_11.png" alt="Screenshot 11" width="55%">
 </p>
 
 ---
