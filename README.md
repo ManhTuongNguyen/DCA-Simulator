@@ -26,7 +26,7 @@ Welcome to the **DCA (Dollar-Cost Averaging) Simulation Platform** repository. T
 ### Updates
 * **Symbol Detail:** Redesigned and updated the symbol detail page for a better user experience.
 
---
+---
 
 ## 📸 Screenshots & Dashboard Gallery
 
