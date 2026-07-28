@@ -14,6 +14,16 @@ Welcome to the **DCA (Dollar-Cost Averaging) Simulation Platform** repository. T
 
 ---
 
+## [v0.1.3] - 2026-07-28
+
+### Bug Fixes
+* **Price Data:** Resolved an issue where crawling prices resulted in missing data.
+* **General:** Fixed various minor bugs and improved overall system stability.
+
+### Updates & Breaking Changes
+* **Deployment / Infrastructure:** Users must run `docker compose down -v`, then `docker compose up -d` again to apply the latest updates.
+* **Cache & Storage:** Users must clear their browser cache and local storage upon entering the front page to ensure proper application behavior.
+
 ## [v0.1.2] - 2026-07-26
 
 ### Bug Fixes
