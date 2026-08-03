@@ -6,13 +6,28 @@ Welcome to the **DCA (Dollar-Cost Averaging) Simulation Platform** repository. T
 
 ## 🚀 Key Features
 
-- **Interactive DCA Simulator**: Input investment amounts, start/end dates, and analyze simulated performance.
-- **Investment growth Simulator**: Input a lump-sum investment amount and simulate its growth over time.
-- **Background Worker Processing**: Heavy simulation computations and stock market data crawling are managed asynchronously using Celery and RabbitMQ.
-- **Data Persistence**: Uses PostgreSQL for system metadata, and integrates DuckDB for fast analytics on historical financial time-series data.
-- **Modern Web Interface**: Responsive and visual dashboard to input parameters and interact with dynamic asset performance charts.
+- **Gold Price Tracking & Analytics**: Access and analyze historical gold price trends alongside stock market data.
+- **Gold & Asset Calculators**: Evaluate investment returns with dedicated Lump-Sum and DCA (Dollar-Cost Averaging) calculators.
+- **Interactive DCA Simulator**: Input investment amounts, start/end dates, and analyze simulated portfolio performance.
+- **Investment Growth Simulator**: Model lump-sum investments to project growth and compound interest over time.
+- **Background Worker Processing**: Heavy simulation computations and financial data crawling are managed asynchronously using Celery and RabbitMQ.
+- **Data Persistence & Analytics**: Powered by PostgreSQL for metadata and DuckDB for ultra-fast queries on historical time-series data.
+- **Modern & Mobile-Optimized UI**: Fully responsive visual dashboard with dynamic asset charts, accessible seamlessly on desktop and mobile devices at [https://www.marketlab.space](https://www.marketlab.space).
 
 ---
+
+## [v0.1.4] - 2026-08-07
+
+### Added
+* **Gold Price History:** Added historical price data tracking for Gold.
+* **Gold Calculator:** Introduced a Gold investment calculator with support for both Lump-Sum and DCA (Dollar-Cost Averaging) strategies.
+* **Custom Domain:** The platform is now officially accessible via [https://www.marketlab.space](https://www.marketlab.space).
+
+### Improvements
+* **Mobile UI:** Enhanced user interface and responsiveness for mobile devices.
+
+### Bug Fixes
+* **General:** Resolved various known bugs and improved overall system stability and performance.
 
 ## [v0.1.3] - 2026-07-28
 
@@ -94,11 +109,6 @@ The platform is containerized using Docker Compose and consists of the following
 
 ## 🔌 How to Customize Ports (Avoiding Port Conflicts)
 
-To prevent conflicts with other services running on your local machine, **all host port mappings have been externalized** into the `.env` configuration file. 
-
-> [!IMPORTANT]
-> **Do not modify the internal container ports.** The backend host port `8069` is statically hardcoded within the frontend application to route API requests. You can freely change all other host ports (PostgreSQL, Web, Redis, RabbitMQ) to resolve local port conflicts.
-
 ### Step-by-Step Port Update Guide
 
 1. **Open the Configuration File**:
@@ -108,15 +118,7 @@ To prevent conflicts with other services running on your local machine, **all ho
    Find the **Customizable Host Ports** section in `.env` and adjust the values of the variables to any unused port numbers on your host machine:
 
    ```env
-   # Database Port Mapping
-   DB_PORT=5432                         # Change if port 5432 is in use by a local PostgreSQL
-
-   # Services Host Port Configuration
-   BACKEND_HOST_PORT=8069               # Keep as 8069 (unless your environment supports routing backend traffic differently)
    WEB_HOST_PORT=3069                   # Change if port 3069 is occupied
-   REDIS_HOST_PORT=6379                 # Change if port 6379 is occupied
-   RABBITMQ_MANAGEMENT_HOST_PORT=15672  # Change if port 15672 is occupied
-   RABBITMQ_AMQP_HOST_PORT=5672         # Change if port 5672 is occupied
    ```
 
 3. **Restart the Application**:
